@@ -18,12 +18,13 @@ namespace EnergyMix
             if (GameManager.instance.modManager.TryGetExecutableAsset(this, out var asset))
                 log.Info($"Current mod asset at {asset.path}");
 
-            // Système de simulation : échantillonnage + sérialisation.
+            GameManager.instance.localizationManager.AddSource("en-US", new EnergyMixLocaleEN());
+            GameManager.instance.localizationManager.AddSource("fr-FR", new EnergyMixLocaleFR());
+
             updateSystem.UpdateAt<EnergyMixSimulationSystem>(SystemUpdatePhase.GameSimulation);
             updateSystem.UpdateAt<EnergyMixSimulationSystem>(SystemUpdatePhase.Serialize);
             updateSystem.UpdateAt<EnergyMixSimulationSystem>(SystemUpdatePhase.Deserialize);
 
-            // Système UI : bindings uniquement.
             updateSystem.UpdateAt<EnergyMixUISystem>(SystemUpdatePhase.UIUpdate);
         }
 

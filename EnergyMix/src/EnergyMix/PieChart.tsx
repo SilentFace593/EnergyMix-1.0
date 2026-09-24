@@ -1,3 +1,4 @@
+import { useTranslate } from "./translate";
 import { CATEGORIES, EnergySnapshot } from "./types";
 
 interface Slice {
@@ -29,10 +30,12 @@ function describeSlice(cx: number, cy: number, r: number, startAngle: number, en
 }
 
 export function PieChart({ snapshot }: { snapshot: EnergySnapshot }) {
-  const slices: Slice[] = CATEGORIES
+ const translate = useTranslate();
+
+  const slices = CATEGORIES
     .map((c) => ({
       key: c.key,
-      label: c.label,
+      label: translate(c.labelKey, c.fallback),
       color: c.color,
       value: (snapshot as any)[c.key] as number,
     }))

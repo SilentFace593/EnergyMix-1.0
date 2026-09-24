@@ -1,12 +1,13 @@
 import { useMemo, useState } from "react";
 import { CATEGORIES, EnergySnapshot } from "./types";
+import { useTranslate } from "./translate";
 
 type WindowOption = "month" | "years2" | "years5";
 
-const WINDOW_LABELS: Record<WindowOption, string> = {
-  month: "1 mois",
-  years2: "2 ans",
-  years5: "5 ans",
+const WINDOW_KEYS: Record<WindowOption, { key: string; fallback: string }> = {
+  month:  { key: "EnergyMix.WINDOW[Month]",  fallback: "1 month" },
+  years2: { key: "EnergyMix.WINDOW[Years2]", fallback: "2 years" },
+  years5: { key: "EnergyMix.WINDOW[Years5]", fallback: "5 years" },
 };
 
 interface LineChartProps {
@@ -17,6 +18,7 @@ interface LineChartProps {
 }
 
 export function LineChart({ fine, medium, coarse, daysPerYear }: LineChartProps) {
+  const translate = useTranslate();
   const [selectedWindow, setSelectedWindow] = useState<WindowOption>("month");
 
   // Les 3 étages RRD sont chronologiques : Coarse (le plus ancien) puis
@@ -87,10 +89,10 @@ export function LineChart({ fine, medium, coarse, daysPerYear }: LineChartProps)
     );
   });
 
-  return (
+    return (
     <div style={{ display: "flex", flexDirection: "column", gap: "8rem" }}>
       <div style={{ display: "flex", gap: "6rem" }}>
-        {(Object.keys(WINDOW_LABELS) as WindowOption[]).map((opt) => (
+        {(Object.keys(WINDOW_KEYS) as WindowOption[]).map((opt) => (
           <button
             key={opt}
             onClick={() => setSelectedWindow(opt)}
@@ -104,7 +106,7 @@ export function LineChart({ fine, medium, coarse, daysPerYear }: LineChartProps)
               color: selectedWindow === opt ? "white" : "rgba(255,255,255,0.7)",
             }}
           >
-            {WINDOW_LABELS[opt]}
+            {translate(WINDOW_KEYS[opt].key, WINDOW_KEYS[opt].fallback)}
           </button>
         ))}
       </div>
@@ -114,7 +116,7 @@ export function LineChart({ fine, medium, coarse, daysPerYear }: LineChartProps)
           width, height, display: "flex", alignItems: "center", justifyContent: "center",
           color: "rgba(255,255,255,0.5)", fontSize: "12rem", textAlign: "center", padding: "0 16rem",
         }}>
-          Pas encore assez de données pour cette période.
+          {translate("EnergyMix.NO_DATA_LINE", "Not enough data yet for this period.")}
         </div>
       ) : (
         <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height}>
@@ -126,12 +128,10 @@ export function LineChart({ fine, medium, coarse, daysPerYear }: LineChartProps)
       <div style={{ display: "flex", flexWrap: "wrap", gap: "8rem" }}>
         {CATEGORIES.map((c) => (
           <div key={c.key} style={{ display: "flex", alignItems: "center", gap: "4rem", fontSize: "11rem" }}>
-            <span style={{
-              width: "8rem", height: "8rem", borderRadius: "2rem",
-              background: c.color, flexShrink: 0,
-              border: "1rem solid rgba(255,255,255,0.3)",
-            }} />
-            <span style={{ color: "rgba(255,255,255,0.75)" }}>{c.label}</span>
+            <span style={{ width: "8rem", height: "8rem", borderRadius: "2rem", background: c.color, flexShrink: 0, border: "1rem solid rgba(255,255,255,0.3)" }} />
+            <span style={{ color: "rgba(255,255,255,0.75)" }}>
+              {translate(c.labelKey, c.fallback)}
+            </span>
           </div>
         ))}
       </div>

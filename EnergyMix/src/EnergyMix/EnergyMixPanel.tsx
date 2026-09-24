@@ -1,5 +1,6 @@
 import { Component, useState } from "react";
 import { useValue } from "cs2/api";
+import { useTranslate } from "./translate";
 import { Button, Panel } from "cs2/ui";
 import { currentMix$, historyFine$, historyMedium$, historyCoarse$ } from "./bindings";
 import { PieChart } from "./PieChart";
@@ -26,6 +27,7 @@ class SafeBoundary extends Component<{ children: any }, { crashed: boolean }> {
 }
 
 function EnergyMixContent() {
+  const translate = useTranslate();
   const [tab, setTab] = useState<TabKey>("mix");
 
   const current = useValue(currentMix$);
@@ -48,10 +50,18 @@ function EnergyMixContent() {
         flexDirection: "column"
     }}
 >
-      <div style={{ display: "flex", gap: "4rem", marginBottom: "10rem" }}>
-        <TabButton label="Current mix" active={tab === "mix"} onClick={() => setTab("mix")} />
-        <TabButton label="History" active={tab === "history"} onClick={() => setTab("history")} />
-      </div>
+     <div style={{ display: "flex", gap: "4rem", marginBottom: "10rem" }}>
+  <TabButton
+    label={translate("EnergyMix.TAB[Mix]", "Current mix") ?? "Current mix"}
+    active={tab === "mix"}
+    onClick={() => setTab("mix")}
+  />
+  <TabButton
+    label={translate("EnergyMix.TAB[History]", "History") ?? "History"}
+    active={tab === "history"}
+    onClick={() => setTab("history")}
+  />
+</div>
 
             <div
         style={{
@@ -102,33 +112,22 @@ function TabButton({ label, active, onClick }: { label: string; active: boolean;
 // s'affichant en superposition via Portal, indépendamment de la zone
 // exiguë réservée aux entrées du menu.
 function EnergyMixEntry() {
+  const translate = useTranslate();
   const [open, setOpen] = useState(false);
-
   return (
     <>
-   <Button
-    variant="flat"
-    onSelect={() => setOpen(o => !o)}
->
-    <div className={buttonStyle.icon} />
-</Button>
-
+      <Button variant="flat" onSelect={() => setOpen(o => !o)}>
+        <div className={buttonStyle.icon} />
+      </Button>
       {open && (
         <Panel
           draggable
           initialPosition={{ x: 0.5, y: 0.3 }}
-         header={
-    <div
-        style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6rem"
-        }}
-    >
-
-        <span>EnergyMix</span>
-    </div>
-}
+          header={
+            <div style={{ display: "flex", alignItems: "center", gap: "6rem" }}>
+              <span>{translate("EnergyMix.TITLE", "EnergyMix")}</span>
+            </div>
+          }
           onClose={() => setOpen(false)}
         >
           <EnergyMixContent />

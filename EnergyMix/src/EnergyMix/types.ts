@@ -29,21 +29,20 @@ export type EnergyCategoryKey =
 
 export interface CategoryMeta {
   key: EnergyCategoryKey;
-  label: string;
+  labelKey: string;   // clé de traduction, ex. "EnergyMix.CATEGORY[Wind]"
+  fallback: string;   // libellé anglais utilisé comme fallback si la clé manque
   color: string;
 }
 
-// Couleurs choisies par l'utilisateur — garder synchronisé avec
-// EnergyCategoryExtensions.GetColorHex côté C#.
 export const CATEGORIES: CategoryMeta[] = [
-  { key: "wind",         label: " Wind Energy   ",          color: "#F2F2F2" },
-  { key: "coal",         label: " Coal    ",         color: "#33303B" },
-  { key: "gas",          label: " Gas    ",             color: "#574B94" },
-  { key: "incineration", label: " Incinérators    ",   color: "#6F4E37" },
-  { key: "solar",        label: " Solar    ",         color: "#F5C518" },
-  { key: "geothermal",   label: " Geothermal    ",      color: "#D62828" },
-  { key: "nuclear",      label: " Nuclear    ",       color: "#2E8B57" },
-  { key: "hydro",        label: " Hydroelectric    ", color: "#1E6FD9" },
+  { key: "wind",         labelKey: "EnergyMix.CATEGORY[Wind]",         fallback: "Wind Energy",   color: "#F2F2F2" },
+  { key: "coal",         labelKey: "EnergyMix.CATEGORY[Coal]",         fallback: "Coal",          color: "#33303B" },
+  { key: "gas",          labelKey: "EnergyMix.CATEGORY[Gas]",          fallback: "Gas",           color: "#574B94" },
+  { key: "incineration", labelKey: "EnergyMix.CATEGORY[Incineration]", fallback: "Incinerators",  color: "#6F4E37" },
+  { key: "solar",        labelKey: "EnergyMix.CATEGORY[Solar]",        fallback: "Solar",         color: "#F5C518" },
+  { key: "geothermal",   labelKey: "EnergyMix.CATEGORY[Geothermal]",   fallback: "Geothermal",    color: "#D62828" },
+  { key: "nuclear",      labelKey: "EnergyMix.CATEGORY[Nuclear]",      fallback: "Nuclear",       color: "#2E8B57" },
+  { key: "hydro",        labelKey: "EnergyMix.CATEGORY[Hydro]",        fallback: "Hydroelectric", color: "#1E6FD9" },
 ];
 
 export const EMPTY_SNAPSHOT: EnergySnapshot = {
